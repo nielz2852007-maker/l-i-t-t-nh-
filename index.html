@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thư Tình Gửi Em</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    font-family: 'Lora', serif;
+    background: radial-gradient(ellipse at 50% 0%, #2b1b3d 0%, #1a1026 45%, #0d0712 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+    color: #f5e9d6;
+    perspective: 1200px;
+  }
+
+  /* Sao trời */
+  .stars { position: fixed; inset: 0; overflow: hidden; }
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    opacity: .8;
+    animation: twinkle 3s infinite ease-in-out;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: .15; transform: scale(.6); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+
+  /* Ánh trăng */
+  .moon {
+    position: fixed;
+    top: 8%; right: 12%;
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff8e7, #f3d9a4);
+    box-shadow: 0 0 60px 20px rgba(243, 217, 164, .45),
+                0 0 120px 40px rgba(243, 217, 164, .18);
+    animation: moonGlow 6s ease-in-out infinite;
+  }
+  @keyframes moonGlow {
+    0%, 100% { box-shadow: 0 0 60px 20px rgba(243,217,164,.45), 0 0 120px 40px rgba(243,217,164,.18); }
+    50% { box-shadow: 0 0 80px 28px rgba(243,217,164,.6), 0 0 150px 55px rgba(243,217,164,.28); }
+  }
+  @media (max-width: 560px){ .moon { width: 70px; height: 70px; top: 5%; right: 8%; } }
+
+  /* Màn hình trái tim đập lúc mới vào */
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 45%, #3a2350 0%, #1a1026 55%, #0d0712 100%);
+    transition: opacity .9s ease, visibility .9s ease;
+  }
+  .intro.hide { opacity: 0; visibility: hidden; }
+
+  .fireworks {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .heart-wrap {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 45px rgba(255, 46, 99, .9));
+    animation: heartbeat 1.3s ease-in-out infinite;
+  }
+  .heart-wrap::before {
+    content: "";
+    position: absolute;
+    width: 130%; height: 130%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 77, 109, .5), transparent 68%);
+    animation: aura 1.3s ease-in-out infinite;
+    z-index: -1;
+  }
+  .heart-svg {
+    width: min(72vw, 340px);
+    height: auto;
+    display: block;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    12% { transform: scale(1.22); }
+    24% { transform: scale(1); }
+    36% { transform: scale(1.15); }
+    48% { transform: scale(1); }
+  }
+  @keyframes aura {
+    0%, 100% { transform: scale(.85); opacity: .45; }
+    50% { transform: scale(1.18); opacity: .9; }
+  }
+
+  /* Phong bì */
+  .envelope {
+    position: relative;
+    width: min(88vw, 440px);
+    aspect-ratio: 3 / 2;
+    cursor: pointer;
+    z-index: 2;
+    transition: transform .6s ease, opacity .8s ease;
+  }
+  .envelope:hover { transform: translateY(-6px) rotateX(4deg); }
+  .envelope.gone { opacity: 0; transform: scale(.6) translateY(40px); pointer-events: none; }
+
+  .hint {
+    position: absolute;
+    bottom: -48px;
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    letter-spacing: 2px;
+    color: #d9b48a;
+    animation: blink 1.8s infinite;
+    z-index: 9;
+  }
+  @keyframes blink { 0%,100%{opacity:.35;} 50%{opacity:1;} }
+  .envelope.open .hint { display: none; }
+
+  .env-back {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, #7a1f3d, #4a1024);
+    border-radius: 10px;
+    box-shadow: 0 30px 70px rgba(0,0,0,.6);
+  }
+
+  /* Nắp phong bì */
+  .env-flap {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+  }
+  .env-flap::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 62%;
+    background: linear-gradient(160deg, #96274c, #5c142c);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top;
+    transition: transform .7s ease;
+    border-radius: 10px 10px 0 0;
+  }
+  .envelope.open .env-flap::before { transform: rotateX(180deg); }
+
+  .env-front {
+    position: absolute; inset: 0;
+    z-index: 6;
+    pointer-events: none;
+  }
+  .env-front::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 62%;
+    background: linear-gradient(200deg, #8a2344, #4a1024);
+    clip-path: polygon(0 100%, 100% 100%, 50% 0);
+    border-radius: 0 0 10px 10px;
+  }
+  .env-front::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 62%;
+    background: linear-gradient(90deg, #7a1f3d, #a12a4e);
+    clip-path: polygon(0 100%, 50% 30%, 100% 100%, 100% 100%, 0 100%);
+    opacity: .55;
+  }
+
+  /* Con dấu sáp */
+  .seal {
+    position: absolute;
+    left: 50%; top: 58%;
+    transform: translate(-50%, -50%);
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ff5370, #b01030 70%);
+    box-shadow: 0 4px 14px rgba(0,0,0,.5), inset 0 2px 6px rgba(255,255,255,.25);
+    z-index: 8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: #ffd9e2;
+    transition: transform .5s ease, opacity .5s ease;
+    animation: sealPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes sealPulse { 0%,100%{ transform: translate(-50%,-50%) scale(1);} 50%{ transform: translate(-50%,-50%) scale(1.08);} }
+  .envelope.open .seal { opacity: 0; transform: translate(-50%,-50%) scale(0) rotate(90deg); }
+
+  /* Lá thư (hiện ra sau khi mở) */
+  .letter {
+    position: fixed;
+    top: 50%; left: 50%;
+    width: min(92vw, 520px);
+    max-height: 94vh;
+    overflow-y: auto;
+    transform: translate(-50%, -50%) scale(.7);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    background: linear-gradient(#fffdf7, #f7edd9);
+    border-radius: 14px;
+    padding: 34px 30px 30px;
+    box-shadow: 0 40px 90px rgba(0,0,0,.65), 0 0 0 1px rgba(163,38,79,.15);
+    transition: transform .8s cubic-bezier(.2,1,.3,1), opacity .6s ease;
+  }
+  .letter::before {
+    content: "";
+    position: absolute;
+    left: 26px; top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(200, 60, 90, .3);
+  }
+  .letter.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Ảnh 2 người */
+  .photos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 20px;
+  }
+  .person { text-align: center; }
+  .avatar {
+    width: 108px; height: 108px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 8px 24px rgba(163,38,79,.35), 0 0 0 3px #f0b7c8;
+    background: #f7edd9;
+    display: block;
+  }
+  .avatar.fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Great Vibes', cursive;
+    font-size: 46px;
+    color: #fff;
+    background: linear-gradient(135deg, #ff8fab, #d6336c);
+  }
+  .person figcaption {
+    margin-top: 8px;
+    font-family: 'Great Vibes', cursive;
+    font-size: 26px;
+    color: #a3264f;
+  }
+  .love {
+    font-size: 30px;
+    color: #ff4d6d;
+    animation: pulse 1.6s ease-in-out infinite;
+    margin-top: -22px;
+  }
+  @keyframes pulse { 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.25);} }
+
+  .letter h2 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 34px;
+    color: #a3264f;
+    margin: 4px 0 14px;
+    text-align: center;
+  }
+  .letter p {
+    font-size: 15px;
+    line-height: 1.9;
+    color: #4a3a30;
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+  .letter .sign {
+    font-family: 'Great Vibes', cursive;
+    font-size: 28px;
+    color: #a3264f;
+    text-align: right;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 480px) {
+    .letter { padding: 26px 20px 22px; }
+    .avatar { width: 84px; height: 84px; }
+    .person figcaption { font-size: 22px; }
+    .letter h2 { font-size: 28px; }
+    .letter p { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+  <div class="intro" id="intro">
+    <canvas class="fireworks" id="fw"></canvas>
+    <div class="heart-wrap">
+      <svg class="heart-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="heartGrad" x1="10%" y1="0%" x2="90%" y2="100%">
+            <stop offset="0%" stop-color="#ffb3c6"/>
+            <stop offset="45%" stop-color="#ff4d6d"/>
+            <stop offset="100%" stop-color="#c9184a"/>
+          </linearGradient>
+          <radialGradient id="heartShine" cx="35%" cy="28%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity=".9"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <path d="M50,32 C50,32 41,10 23,10 C9,10 2,22 2,35 C2,56 24,72 50,92 C76,72 98,56 98,35 C98,22 91,10 77,10 C59,10 50,32 50,32 Z"
+              fill="url(#heartGrad)"/>
+        <ellipse cx="34" cy="31" rx="13" ry="9"
+                 fill="url(#heartShine)" transform="rotate(-25 34 31)"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="stars" id="stars"></div>
+  <div class="moon"></div>
+
+  <div class="envelope" id="envelope">
+    <div class="env-back"></div>
+    <div class="env-flap"></div>
+    <div class="env-front"></div>
+    <div class="seal">❤</div>
+    <div class="hint">Chạm để mở thư</div>
+  </div>
+
+  <article class="letter" id="letter">
+    <div class="photos">
+      <figure class="person">
+        <img class="avatar" src="khanh.jpg" alt="Khánh" data-initial="K">
+        <figcaption>Khánh</figcaption>
+      </figure>
+      <span class="love">❤</span>
+      <figure class="person">
+        <img class="avatar" src="trang.jpg" alt="Trang" data-initial="T">
+        <figcaption>Trang</figcaption>
+      </figure>
+    </div>
+
+    <h2>Gửi Trang yêu dấu,</h2>
+    <p>
+      Khánh không nghĩ sẽ có một ngày được làm quen với một bạn nữ mà Khánh
+      đã rất thích ngay từ cái nhìn đầu tiên. Khánh cũng có lúc làm cho Trang buồn,
+      có khi Khánh còn nghĩ là "thôi được rồi, chắc phải dừng lại mối quan hệ này được rồi",
+      nhưng mà mỗi lần Khánh nghĩ vậy thì Khánh thấy mình là một người chưa được tốt
+      và còn suy nghĩ rất là chưa trưởng thành.
+    </p>
+    <p>
+      Nên Khánh luôn luôn dành hết những điều tốt đẹp nhất cho Trang. Khánh thì vẫn là
+      một người không biết gì hết trong tình yêu, nhưng Khánh sẽ cố gắng thay đổi
+      để có thể phù hợp với Trang.
+    </p>
+    <p>
+      Khánh không cần điều gì lớn lao, chỉ cần là được ở bên Trang thôi,
+      là Khánh có thể sẽ vui vẻ trong ngày hôm đó.
+    </p>
+    <div class="sign">Thương Trang, Khánh ❤</div>
+  </article>
+
+<script>
+  /* Tạo sao */
+  const starsBox = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.top = Math.random() * 100 + 'vh';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    const size = Math.random() * 2 + 1;
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+    starsBox.appendChild(s);
+  }
+
+  /* Ảnh lỗi -> hiện chữ cái viết tay */
+  document.querySelectorAll('.avatar').forEach(img => {
+    img.addEventListener('error', () => {
+      img.classList.add('fallback');
+      img.textContent = img.dataset.initial;
+      img.removeAttribute('src');
+    });
+  });
+
+  /* Tự động mở phong bì */
+  const envelope = document.getElementById('envelope');
+  const letter = document.getElementById('letter');
+
+  function openEnvelope() {
+    if (envelope.classList.contains('open')) return;
+    envelope.classList.add('open');
+    setTimeout(() => {
+      letter.classList.add('show');
+      envelope.classList.add('gone');
+    }, 650);
+  }
+
+  envelope.addEventListener('click', openEnvelope);
+
+  /* Màn hình trái tim đập + pháo hoa -> hiện phong bì */
+  const intro = document.getElementById('intro');
+
+  const canvas = document.getElementById('fw');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], rockets = [], running = false, rafId = null, launchTimer = null;
+  const palette = ['#ff4d6d', '#ffd166', '#ff8fab', '#c77dff', '#4cc9f0', '#ffb703', '#ff5c8a', '#7bf1a8'];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+
+  function launch(x) {
+    rockets.push({
+      x: x,
+      y: H,
+      vx: (Math.random() - .5) * 1.6,
+      vy: -(9 + Math.random() * 3.5),
+      target: H * (0.12 + Math.random() * 0.28)
+    });
+  }
+
+  function explode(x, y, color) {
+    const n = 50 + Math.floor(Math.random() * 40);
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const sp = Math.random() * 5.5 + 1;
+      particles.push({
+        x: x, y: y,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp,
+        life: 1,
+        decay: 0.010 + Math.random() * 0.02,
+        color: color,
+        size: 1.4 + Math.random() * 2.2
+      });
+    }
+  }
+
+  function tick() {
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = 'rgba(0,0,0,0.16)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+
+    for (let i = rockets.length - 1; i >= 0; i--) {
+      const r = rockets[i];
+      r.x += r.vx; r.y += r.vy; r.vy += 0.12;
+      ctx.beginPath();
+      ctx.arc(r.x, r.y, 2.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      if (r.vy >= 0 || r.y <= r.target) {
+        explode(r.x, r.y, palette[Math.floor(Math.random() * palette.length)]);
+        rockets.splice(i, 1);
+      }
+    }
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.06; p.vx *= 0.99; p.vy *= 0.995;
+      p.life -= p.decay;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+      ctx.globalAlpha = p.life;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    if (running || particles.length || rockets.length) {
+      rafId = requestAnimationFrame(tick);
+    } else {
+      rafId = null;
+    }
+  }
+
+  function startFireworks() {
+    resize();
+    running = true;
+    if (!rafId) tick();
+    launch(W * 0.5);
+    launchTimer = setInterval(() => {
+      launch(Math.random() * W);
+      if (Math.random() < 0.6) launch(Math.random() * W);
+    }, 220);
+  }
+
+  function stopFireworks() {
+    running = false;
+    clearInterval(launchTimer);
+  }
+
+  window.addEventListener('load', () => {
+    startFireworks();
+    setTimeout(() => {
+      intro.classList.add('hide');
+      stopFireworks();
+    }, 6500);
+  });
+</script>
+</body>
+</html>
