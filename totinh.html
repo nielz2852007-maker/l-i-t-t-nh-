@@ -236,19 +236,20 @@
 
   <main class="card">
     <h1 class="names">Khánh <span class="heart-icon">❤</span> Trang</h1>
-    <p class="subtitle">Một lời muốn nói từ trái tim...</p>
+    <p class="subtitle">Một lời muốn gửi đến em...</p>
 
     <p class="message">
       Gửi <span class="highlight">Trang</span>, người con gái đặc biệt nhất,<br>
       Từ ngày gặp em, ngày nào của anh cũng trở nên tươi sáng hơn.
-      Anh không giỏi nói những lời hoa mỹ, nhưng anh biết rõ một điều:
-      anh rất thích em. Anh muốn được nắm tay em, cùng em đi qua thật nhiều mùa nắng mưa phía trước.
+      Anh không giỏi nói những lời hoa mỹ, chỉ mong được cho nhau một cơ hội
+      để tìm hiểu nhau nhiều hơn. Anh muốn được quan tâm em, được nghe em kể
+      những chuyện nhỏ nhặt, được cùng em đi qua thật nhiều ngày bình thường phía trước.
     </p>
 
-    <p class="question">Trang có đồng ý làm người yêu của Khánh không? 🥰</p>
+    <p class="question">Trang cho Khánh cơ hội được tìm hiểu em nhé? 🥰</p>
 
     <div class="buttons" id="buttons">
-      <button class="btn-yes" id="yes">Đồng ý 💖</button>
+      <button class="btn-yes" id="yes">Cho cơ hội 💖</button>
       <button class="btn-no" id="no">Để em suy nghĩ đã</button>
     </div>
 
@@ -295,10 +296,10 @@
   }
 
   yesBtn.addEventListener('click', () => {
-    result.textContent = 'Yêu Trang nhiều lắm! 💞 Anh hứa sẽ làm em hạnh phúc 💍';
+    result.textContent = 'Cảm ơn Trang! 💞 Anh sẽ từ từ tìm hiểu em từng chút một 🌷';
     result.classList.add('show');
     noBtn.style.display = 'none';
-    yesBtn.textContent = 'Yêu em ❤';
+    yesBtn.textContent = 'Cho cơ hội ❤';
     burstHearts();
   });
 
@@ -320,7 +321,7 @@
     noBtn.textContent = noTexts[noCount % noTexts.length];
   });
   noBtn.addEventListener('click', () => {
-    noBtn.textContent = 'Thôi được rồi, em đồng ý đó 😳❤';
+    noBtn.textContent = 'Thôi được rồi, em cho cơ hội đó 😳❤';
   });
 </script>
 </body>
